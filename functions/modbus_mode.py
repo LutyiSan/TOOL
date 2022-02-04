@@ -11,7 +11,7 @@ def modbus_mode():
     port = mbm.get_digit(comm_text['mb_text_2'], comm_text['mb_error_2'], 1, 65535)
     register = mbm.get_digit(comm_text['mb_text_3'], comm_text['mb_error_3'], 1, 65535)
     quantity = mbm.get_digit(comm_text['mb_text_4'], comm_text['mb_error_4'], 1, 125)
-    type = mbm.get_enum(comm_text['mb_text_5'], comm_text['mb_error_5'], ['3', '4'])
+    type = mbm.get_enum(comm_text['mb_text_5'], comm_text['mb_error_5'], ['1', '2', '3', '4'])
     client = TCPClient(ip, int(port), int(register), int(quantity), type)
     if client.connection():
         out_data = client.read()

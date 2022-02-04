@@ -37,14 +37,18 @@ class BACnet:
                     if isinstance(name, (str, list)) and len(name) > 0:
                         self.i_am_dict['DEVICE_NAME'].append(name)
                     else:
+                        name = "unknown"
                         self.i_am_dict['DEVICE_NAME'].append('unknown')
                     if isinstance(name, (str, list)) and len(name) > 0:
                         self.i_am_dict['VENDOR'].append(vendor)
                     else:
+                        vendor = "unknown"
                         self.i_am_dict['VENDOR'].append('unknown')
+                    print(Fore.LIGHTGREEN_EX+f'ip: {i[0]} | id: {i[1]} | name: {name} | vendor: {vendor}')
         except Exception as e:
             print(Fore.LIGHTRED_EX + "NO RESPONSE WHO-IS", e)
         self.bacnet_client.disconnect()
+
         return self.i_am_dict
 
     def read_single(self, device_ip, object_type, object_id):
