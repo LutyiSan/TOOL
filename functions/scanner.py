@@ -45,11 +45,5 @@ class Scanner:
                 self.pandas_list[1].append("UNKNOWN")
                 self.pandas_list[2].append("UNKNOWN")
                 self.pandas_list[3].append("Fail")
-        print(Fore.LIGHTBLUE_EX + f'\nScanning results')
 
-        for i in self.result_list:
-            if "UNREACHABLE" in i:
-                print(Fore.RED + f'{i}')
-            else:
-                print(Fore.GREEN + f'{i}')
         return self.pandas_list

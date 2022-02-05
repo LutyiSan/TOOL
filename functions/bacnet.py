@@ -44,7 +44,7 @@ class BACnet:
                     else:
                         vendor = "unknown"
                         self.i_am_dict['VENDOR'].append('unknown')
-                    print(Fore.LIGHTGREEN_EX+f'ip: {i[0]} | id: {i[1]} | name: {name} | vendor: {vendor}')
+                    print(Fore.LIGHTGREEN_EX + f'ip: {i[0]} | id: {i[1]} | name: {name} | vendor: {vendor}')
         except Exception as e:
             print(Fore.LIGHTRED_EX + "NO RESPONSE WHO-IS", e)
         self.bacnet_client.disconnect()
@@ -66,15 +66,14 @@ class BACnet:
                 else:
                     self.single_point_list.append('unknown')
                 rl = self.bacnet_client.read(f'{device_ip}/{self.netmask} {obj_type} {object_id} reliability')
-                if isinstance(sf, str):
+                if isinstance(sf, (list, str)) and len(sf) > 0:
                     self.single_point_list.append(rl)
                 else:
                     self.single_point_list.append('unknown')
             else:
                 self.single_point_list.append('unknown')
-            print(Fore.LIGHTGREEN_EX + f'object_type: {obj_type} | object_id:{object_id} | present_value:'
-                                       f'| {self.single_point_list[0]} |'f'status_flags: {self.single_point_list[1]} |'
-                                       f'reliability: {self.single_point_list[2]}')
+            print(Fore.LIGHTGREEN_EX + f'{obj_type} | {object_id} | {self.single_point_list[0]} | '
+                                       f'{self.single_point_list[1]} | {self.single_point_list[2]}')
         except Exception as e:
             print(Fore.LIGHTRED_EX + "Can't read property", e)
         self.bacnet_client.disconnect()
@@ -113,6 +112,3 @@ class BACnet:
     def disconnect(self):
         self.bacnet_client.disconnect()
         pass
-
-
-

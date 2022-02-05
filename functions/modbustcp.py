@@ -67,9 +67,9 @@ def to_32bit_value(values):
 
 def to_bool_and_uint(int_data):
     if int_data[0] == 0:
-        bool_value = "True"
+        bool_value = "FALSE"
     else:
-        bool_value = "False"
+        bool_value = "TRUE"
     output_value = bin(int_data[0])
     output_value = output_value.split("b")[1]
     if int_data[0] >= 0:
@@ -109,14 +109,14 @@ class TCPClient:
             try:
                 result = self.tester.read_holdingregisters(self.reg_address + count, 1)
                 self.result_dict["reg_address"].append(self.reg_address + count)
-                if isinstance(result, list) and len(result) == 1:
+                if isinstance(result, list) and len(result) != 0:
                     self.result_dict["int"].append(result[0])
                 result_float = convert_registers_to_float(
                     self.tester.read_holdingregisters(self.reg_address + count, 2))
-                if isinstance(result, list) and len(result) == 2:
+                if isinstance(result_float, tuple) and len(result) != 0:
                     self.result_dict["float"].append(result_float)
                 convert_data = to_bool_and_uint(result)
-                if isinstance(convert_data, list):
+                if isinstance(convert_data, tuple) and len(convert_data) != 0:
                     self.result_dict["bool"].append(convert_data[0])
                     self.result_dict["uint"].append(convert_data[1])
             except Exception as e:
@@ -133,14 +133,15 @@ class TCPClient:
             try:
                 result = self.tester.read_inputregisters(self.reg_address + count, 1)
                 self.result_dict["reg_address"].append(self.reg_address + count)
-                if isinstance(result, list) and len(result) == 1:
+                if isinstance(result, list) and len(result) != 0:
                     self.result_dict["int"].append(result[0])
                 result_float = convert_registers_to_float(
                     self.tester.read_inputregisters(self.reg_address + count, 2))
-                if isinstance(result, list) and len(result) == 2:
+
+                if isinstance(result_float, tuple) and len(result) != 0:
                     self.result_dict["float"].append(result_float)
                 convert_data = to_bool_and_uint(result)
-                if isinstance(convert_data, list):
+                if isinstance(convert_data, tuple) and len(convert_data) == 2:
                     self.result_dict["bool"].append(convert_data[0])
                     self.result_dict["uint"].append(convert_data[1])
             except Exception as e:
@@ -159,12 +160,12 @@ class TCPClient:
                 self.result_dict["reg_address"].append(self.reg_address + count)
                 if isinstance(result, list) and len(result) == 1:
                     self.result_dict["int"].append("none")
-                    self.result_dict["float"].append('none')
+                    self.result_dict["float"].append(("none",))
                     self.result_dict["bool"].append(result[0])
                     self.result_dict["uint"].append('none')
             except Exception as e:
                 self.result_dict["int"].append("none")
-                self.result_dict["float"].append("none")
+                self.result_dict["float"].append(("none",))
                 self.result_dict["bool"].append("none")
                 self.result_dict["uint"].append("none")
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)
@@ -178,12 +179,12 @@ class TCPClient:
                 self.result_dict["reg_address"].append(self.reg_address + count)
                 if isinstance(result, list) and len(result) == 1:
                     self.result_dict["int"].append("none")
-                    self.result_dict["float"].append('none')
+                    self.result_dict["float"].append(("none",))
                     self.result_dict["bool"].append(result[0])
                     self.result_dict["uint"].append('none')
             except Exception as e:
                 self.result_dict["int"].append("none")
-                self.result_dict["float"].append("none")
+                self.result_dict["float"].append(("none",))
                 self.result_dict["bool"].append("none")
                 self.result_dict["uint"].append("none")
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)

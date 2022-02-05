@@ -15,13 +15,14 @@ def modbus_mode():
     client = TCPClient(ip, int(port), int(register), int(quantity), type)
     if client.connection():
         out_data = client.read()
+        print(out_data)
         client.disconnect()
         data_len = len(out_data.get("reg_address"))
         i = -1
         while i < (data_len - 1):
             i += 1
-            print(Fore.LIGHTCYAN_EX + f'address: {out_data.get("reg_address")[i]} | int: {out_data.get("int")[i][0]}'
-                                      f' | float: {out_data.get("float")[i][0]}' f' | bool; {out_data.get("bool")[i]} |'
+            print(Fore.LIGHTCYAN_EX + f'address: {out_data.get("reg_address")[i]} | int: {out_data.get("int")[i]}'
+                                      f' | float: {out_data.get("float")[i][0]}' f' | bool: {out_data.get("bool")[i]} |'
                                       f' uint: {out_data.get("uint")[i]}')
         return out_data
     else:
