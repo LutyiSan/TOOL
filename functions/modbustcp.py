@@ -2,7 +2,7 @@ from easymodbus import modbusClient
 from easymodbus.modbusClient import convert_registers_to_float
 from colorama import Fore
 import struct
-
+from func_timeout import func_set_timeout
 
 def to_16bit_array(value):
     bin_value = bin(value[0])[2:]
@@ -81,14 +81,14 @@ def to_bool_and_uint(int_data):
 
 
 class TCPClient:
-    def __init__(self, ip_address, tcp_port, reg_address, quantity, reg_type):
+    def __init__(self, ip_address, tcp_port):
         self.output_value = None
         self.connect_state = None
         self.ip = ip_address
         self.port = tcp_port
-        self.reg_address = reg_address
-        self.quantity = quantity
-        self.reg_type = reg_type
+        self.reg_address = None
+        self.quantity = None
+        self.reg_type = None
         self.tester = modbusClient.ModbusClient(self.ip, self.port)
         self.result_dict = {"reg_address": [], 'int': [], 'float': [], 'bool': [], 'uint': []}
 
@@ -127,6 +127,7 @@ class TCPClient:
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)
 
     def read_ir(self):
+
         count = -1
         while count < self.quantity:
             count += 1
@@ -189,7 +190,11 @@ class TCPClient:
                 self.result_dict["uint"].append("none")
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)
 
-    def read(self):
+    def read(self,reg_address, quantity, reg_type):
+        self.result_dict = {"reg_address": [], 'int': [], 'float': [], 'bool': [], 'uint': []}
+        self.reg_address = reg_address
+        self.quantity = quantity
+        self.reg_type = reg_type
         if self.reg_type == '3':
             self.read_hr()
         elif self.reg_type == '4':

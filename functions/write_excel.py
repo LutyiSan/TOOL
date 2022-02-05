@@ -25,7 +25,7 @@ def write_modbus_data(my_list, file_name):
     while i < (data_len - 1):
         i += 1
         file.loc[i, 'ADDRESS'] = my_list.get("reg_address")[i]
-        file.loc[i, 'INT_VALUE'] = my_list.get("int")[i][0]
+        file.loc[i, 'INT_VALUE'] = my_list.get("int")[i]
         file.loc[i, 'FLOAT_VALUE'] = my_list.get("float")[i][0]
         file.loc[i, 'BOOL_VALUE'] = my_list.get("bool")[i]
         file.loc[i, 'UINT_VALUE'] = my_list.get("uint")[i]
