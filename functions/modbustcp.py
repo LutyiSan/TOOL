@@ -4,6 +4,7 @@ from colorama import Fore
 import struct
 from func_timeout import func_set_timeout
 
+
 def to_16bit_array(value):
     bin_value = bin(value[0])[2:]
     if len(bin_value) != 16:
@@ -102,6 +103,7 @@ class TCPClient:
             print(Fore.LIGHTRED_EX + "Can't connect to device", e)
             return False
 
+    @func_set_timeout(5)
     def read_hr(self):
         count = -1
         while count < (self.quantity - 1):
@@ -126,8 +128,8 @@ class TCPClient:
                 self.result_dict["uint"].append("none")
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)
 
+    @func_set_timeout(5)
     def read_ir(self):
-
         count = -1
         while count < self.quantity:
             count += 1
@@ -152,6 +154,7 @@ class TCPClient:
                 self.result_dict["uint"].append("none")
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)
 
+    @func_set_timeout(5)
     def read_coils(self):
         count = -1
         while count < self.quantity:
@@ -171,6 +174,7 @@ class TCPClient:
                 self.result_dict["uint"].append("none")
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)
 
+    @func_set_timeout(5)
     def read_di(self):
         count = -1
         while count < self.quantity:
@@ -190,19 +194,31 @@ class TCPClient:
                 self.result_dict["uint"].append("none")
                 print(Fore.LIGHTRED_EX + "Can't Read registers", e)
 
-    def read(self,reg_address, quantity, reg_type):
+    def read(self, reg_address, quantity, reg_type):
         self.result_dict = {"reg_address": [], 'int': [], 'float': [], 'bool': [], 'uint': []}
         self.reg_address = reg_address
         self.quantity = quantity
         self.reg_type = reg_type
         if self.reg_type == '3':
-            self.read_hr()
+            try:
+                self.read_hr()
+            except:
+                print(Fore.LIGHTRED_EX + "READ TIMEOUT")
         elif self.reg_type == '4':
-            self.read_ir()
+            try:
+                self.read_ir()
+            except:
+                print(Fore.LIGHTRED_EX + "READ TIMEOUT")
         elif self.reg_type == '2':
-            self.read_di()
+            try:
+                self.read_di()
+            except:
+                print(Fore.LIGHTRED_EX + "READ TIMEOUT")
         elif self.reg_type == '1':
-            self.read_coils()
+            try:
+                self.read_coils()
+            except:
+                print(Fore.LIGHTRED_EX + "READ TIMEOUT")
         return self.result_dict
 
     def disconnect(self):

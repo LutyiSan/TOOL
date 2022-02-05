@@ -26,11 +26,14 @@ def run():
                                   f'#############################')
         mm = ModbusMode()
         while True:
+            data_dict = None
             mm.params()
             if mm.create_client():
                 while True:
-                    data_dict = mm.read()
-
+                    try:
+                        data_dict = mm.read()
+                    except Exception as e:
+                        print('TIMEOUT\n', e)
                     write_modbus_data(data_dict, 'result_excel/_modbus.xlsx')
                     print(Fore.LIGHTYELLOW_EX + f'Result write in file - result_excel/_modbus.xlsx.\n'
                                                 f'Rename it and save, if you need\nHave a nice day)!')
