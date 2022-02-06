@@ -52,8 +52,9 @@ def run():
         bm = BACnetMode()
         while True:
             bm.params()
-            if bm.create_client():
-                while True:
+
+            while True:
+                if bm.create_client():
                     method_dict = bm.run()
                     if method_dict[0] == '1':
                         write_bacnet_i_am(method_dict[1], 'result_excel/_i_am_bacnet.xlsx')
