@@ -56,13 +56,14 @@ def run():
             while True:
                 if bm.create_client():
                     method_dict = bm.run()
-                    if method_dict[0] == '1':
-                        write_bacnet_i_am(method_dict[1], 'result_excel/_i_am_bacnet.xlsx')
-                        print(Fore.LIGHTYELLOW_EX + f' Result write in file - result_excel/_i_am_bacnet.xlsx.\n'
+                    if method_dict is not None:
+                        if method_dict[0] == '1':
+                            write_bacnet_i_am(method_dict[1], 'result_excel/_i_am_bacnet.xlsx')
+                            print(Fore.LIGHTYELLOW_EX + f' Result write in file - result_excel/_i_am_bacnet.xlsx.\n'
                                                     f'Rename it and save, if you need.\nHave a nice day)!')
-                    elif method_dict[0] == '2':
-                        write_bacnet_objects(method_dict[1], 'result_excel/_object_bacnet.xlsx')
-                        print(Fore.LIGHTYELLOW_EX + f' Result write in file - result_excel/_object_bacnet.xlsx.\n'
+                        elif method_dict[0] == '2':
+                            write_bacnet_objects(method_dict[1], 'result_excel/_object_bacnet.xlsx')
+                            print(Fore.LIGHTYELLOW_EX + f' Result write in file - result_excel/_object_bacnet.xlsx.\n'
                                                     f'Rename it and save, if you need.\nHave a nice day)!')
                     change = input(Fore.LIGHTBLUE_EX + "Do you want change interface settings(yes/no)?: ")
                     if change in ['Y', 'y', 'yes']:

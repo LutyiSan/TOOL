@@ -2,6 +2,19 @@ import BAC0
 from colorama import Fore, init
 
 
+def validate_ip(ip):
+    a = ip.split('.')
+    if len(a) != 4:
+        return False
+    for x in a:
+        if not x.isdigit():
+            return False
+        i = int(x)
+        if i < 0 or i > 255:
+            return False
+    return True
+
+
 class BACnet:
     def __init__(self, host_ip="localhost", netmask='24', listen_port=47808):
         self.desk = None
@@ -26,12 +39,25 @@ class BACnet:
         return False
 
     def who_is(self):
+        i_am_list = None
+        name = None
+        vendor = None
         try:
             i_am_list = self.bacnet_client.whois()
-            if len(i_am_list) > 0:
-                for i in i_am_list:
-                    name = self.bacnet_client.read(f'{i[0]}/{self.netmask} device {i[1]} objectName')
-                    vendor = self.bacnet_client.read(f'{i[0]}/{self.netmask} device {i[1]} vendorName')
+        except Exception as e:
+            print(Fore.LIGHTRED_EX + "NO RESPONSE WHO-IS", e)
+        if len(i_am_list) > 0:
+            for i in i_am_list:
+                if validate_ip(i[0]):
+                    try:
+                        name = self.bacnet_client.read(f'{i[0]}/{self.netmask} device {i[1]} objectName')
+                    except:
+                        print(f'No response NAME-request: {i[0]} | {i[1]}')
+                    try:
+                        vendor = self.bacnet_client.read(f'{i[0]}/{self.netmask} device {i[1]} vendorName')
+                    except:
+                        print(f'No response VENDOR-request: {i[0]} | {i[1]}')
+
                     self.i_am_dict['DEVICE_IP'].append(i[0])
                     self.i_am_dict['DEVICE_ID'].append(i[1])
                     if isinstance(name, (str, list)) and len(name) > 0:
@@ -45,16 +71,15 @@ class BACnet:
                         vendor = "unknown"
                         self.i_am_dict['VENDOR'].append('unknown')
                     print(Fore.LIGHTGREEN_EX + f'ip: {i[0]} | id: {i[1]} | name: {name} | vendor: {vendor}')
-        except Exception as e:
-            print(Fore.LIGHTRED_EX + "NO RESPONSE WHO-IS", e)
+
         self.bacnet_client.disconnect()
 
         return self.i_am_dict
 
     def read_single(self, device_ip, object_type, object_id):
         object_types = {"0": 'analogInput', '1': 'analogOutput', '2': 'analogValue', '3': 'binaryInput',
-                        '4': 'binaryOutput', '5': 'binaryValue', '13': 'multistateInput', '14': 'multistateOutput',
-                        '19': 'multistateValue'}
+                        '4': 'binaryOutput', '5': 'binaryValue', '13': 'multiStateInput', '14': 'multiStateOutput',
+                        '19': 'multiStateValue'}
         obj_type = object_types[f'{object_type}']
         try:
             pv = self.bacnet_client.read(f'{device_ip}/{self.netmask} {obj_type} {object_id} presentValue')
@@ -65,11 +90,15 @@ class BACnet:
                     self.single_point_list.append(sf)
                 else:
                     self.single_point_list.append('unknown')
-                rl = self.bacnet_client.read(f'{device_ip}/{self.netmask} {obj_type} {object_id} reliability')
-                if isinstance(sf, (list, str)) and len(sf) > 0:
-                    self.single_point_list.append(rl)
-                else:
+                try:
+                    rl = self.bacnet_client.read(f'{device_ip}/{self.netmask} {obj_type} {object_id} reliability')
+                    if isinstance(sf, (list, str)) and len(sf) > 0:
+                        self.single_point_list.append(rl)
+                    else:
+                        self.single_point_list.append('unknown')
+                except Exception as e:
                     self.single_point_list.append('unknown')
+                    print(e)
             else:
                 self.single_point_list.append('unknown')
             print(Fore.LIGHTGREEN_EX + f'{obj_type} | {object_id} | {self.single_point_list[0]} | '
@@ -112,3 +141,4 @@ class BACnet:
     def disconnect(self):
         self.bacnet_client.disconnect()
         pass
+
