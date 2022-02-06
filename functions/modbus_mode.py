@@ -1,6 +1,4 @@
 from colorama import Fore, init
-
-
 from functions.modbustcp import TCPClient
 from functions.io_texts import comm_text
 from functions.mode import Mode

@@ -1,69 +1,7 @@
 from easymodbus import modbusClient
 from easymodbus.modbusClient import convert_registers_to_float
 from colorama import Fore
-import struct
 from func_timeout import func_set_timeout
-
-
-def to_16bit_array(value):
-    bin_value = bin(value[0])[2:]
-    if len(bin_value) != 16:
-        zero_array = ""
-        count = 16 - len(bin_value)
-        i = 0
-        while i < count:
-            i += 1
-            zero_array += '0'
-        zero_array += bin_value
-        return zero_array
-    else:
-        return bin_value
-
-
-def to_bool(value, bit_number=99):
-    if bit_number == 99:
-        if value != 0:
-            return 'true'
-        else:
-            return 'false'
-    elif 16 > bit_number >= 0:
-        bin_value = to_16bit_array(value)[bit_number]
-        if bin_value == '0':
-            return 'false'
-        else:
-            return 'true'
-
-
-def to_uint_16(value):
-    if value[0] >= 0:
-        return value
-    else:
-        return abs(value) + 32768
-
-
-def to_float_32(registers):
-    """
-    Convert 32 Bit real Value to two 16 Bit Value to send as Modbus Registers
-    floatValue: Value to be converted
-    return: 16 Bit Register values int[]
-    """
-    b = bytearray(4)
-    b[0] = registers[0] & 0xff
-    b[1] = (registers[0] & 0xff00) >> 8
-    b[2] = (registers[1] & 0xff)
-    b[3] = (registers[1] & 0xff00) >> 8
-    returnValue = struct.unpack('<f', b)  # little Endian
-    return returnValue
-
-
-def to_32bit_value(values):
-    """
-    Convert two 16 Bit Registers to 32 Bit long value - Used to receive 32 Bit values from Modbus (Modbus Registers are 16 Bit long)
-    registers: 16 Bit Registers
-    return: 32 bit value
-    """
-    return_value = (int(values[0]) & 0x0000FFFF) | (int((values[1]) << 16) & 0xFFFF0000)
-    return return_value
 
 
 def to_bool_and_uint(int_data):
