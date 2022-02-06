@@ -36,7 +36,7 @@ class BACnet:
             return True
         except Exception as e:
             print(Fore.LIGHTRED_EX + "FAIL create BACnet Client", e)
-        return False
+            return False
 
     def who_is(self):
         i_am_list = None

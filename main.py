@@ -42,6 +42,8 @@ def run():
                         break
                     else:
                         mm.create_client()
+            else:
+                break
 
     elif mode.bacnet:
         print(Fore.LIGHTBLUE_EX + f'#############################\n'
