@@ -16,11 +16,13 @@ class BACnetMode:
         self.ip = None
         self.mode = None
 
-    def create_client(self):
+    def params(self):
         self.mode = Mode()
         self.ip = self.mode.get_ip(comm_text['bn_text_1'], comm_text['bn_error_1'])
         self.port = self.mode.get_digit(comm_text['bn_text_3'], comm_text['bn_error_3'], 1, 65535)
         self.client = BACnet(host_ip=self.ip, listen_port=int(self.port))
+
+    def create_client(self):
         if self.client.create_client():
             return True
         else:

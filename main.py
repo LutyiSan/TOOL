@@ -51,6 +51,7 @@ def run():
                                   f'#############################')
         bm = BACnetMode()
         while True:
+            bm.params()
             if bm.create_client():
                 while True:
                     method_dict = bm.run()
