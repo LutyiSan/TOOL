@@ -24,16 +24,15 @@ class ModbusMode:
         else:
             return False
 
-
     def read(self):
-        register = self.mbm.get_digit(comm_text['mb_text_3'], comm_text['mb_error_3'], 1, 65535)
+        register = self.mbm.get_digit(comm_text['mb_text_3'], comm_text['mb_error_3'], 0, 65535)
         quantity = self.mbm.get_digit(comm_text['mb_text_4'], comm_text['mb_error_4'], 1, 125)
         type = self.mbm.get_enum(comm_text['mb_text_5'], comm_text['mb_error_5'], ['1', '2', '3', '4'])
-        print(register, '  ', quantity, '  ', type)
         self.out_data = self.client.read(int(register), int(quantity), type)
 
         self.client.disconnect()
         data_len = len(self.out_data.get("reg_address"))
+
         if data_len > 0:
             i = -1
             while i < (data_len - 1):

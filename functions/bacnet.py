@@ -16,7 +16,7 @@ def validate_ip(ip):
 
 
 class BACnet:
-    def __init__(self, host_ip="localhost", netmask='24', listen_port=47808):
+    def __init__(self, host_ip="localhost", netmask='32', listen_port=47808):
         self.desk = None
         self.name = None
         init(autoreset=True)

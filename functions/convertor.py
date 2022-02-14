@@ -1,5 +1,6 @@
 import struct
 
+# input dict {'data': [], 'length': int, 'word_order': str, 'byte_order': str, 'type': str, 'bit_number': int}
 
 class Converter:
 

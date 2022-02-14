@@ -4,19 +4,37 @@ from colorama import Fore
 from func_timeout import func_set_timeout
 
 
-def to_bool_and_uint(int_data):
-    if int_data[0] == 0:
+def data_to_bin_16(data):
+    if isinstance(data, int):
+        if data in range(0, 65535):
+            data_bin = bin(data)
+            data_split = data_bin.split('b')[1]
+            bin_16 = data_split
+            if len(bin_16) < 16:
+                while len(bin_16) < 16:
+                    bin_16 = '0' + bin_16
+            else:
+                bin_16 = data_split
+            return bin_16
+
+
+def to_int_16(data):
+    bin_16 = data_to_bin_16(data)
+    if bin_16[0] == '0':
+        int_16 = int(bin_16, 2)
+    else:
+        format_data = bin_16[1:]
+        number = int(format_data, 2)
+        int_16 = -32768 + number
+    return int_16
+
+
+def to_bool(int_data):
+    if int_data == 0:
         bool_value = "FALSE"
     else:
         bool_value = "TRUE"
-    output_value = bin(int_data[0])
-    output_value = output_value.split("b")[1]
-    if int_data[0] >= 0:
-        uint_value = int_data[0]
-    else:
-        output_value = output_value + "0"
-        uint_value = int(output_value, 2)
-    return bool_value, uint_value
+    return bool_value
 
 
 class TCPClient:
@@ -50,15 +68,16 @@ class TCPClient:
                 result = self.tester.read_holdingregisters(self.reg_address + count, 1)
                 self.result_dict["reg_address"].append(self.reg_address + count)
                 if isinstance(result, list) and len(result) != 0:
-                    self.result_dict["int"].append(result[0])
+                    self.result_dict["uint"].append(result[0])
                 result_float = convert_registers_to_float(
                     self.tester.read_holdingregisters(self.reg_address + count, 2))
                 if isinstance(result_float, tuple) and len(result) != 0:
                     self.result_dict["float"].append(result_float)
-                convert_data = to_bool_and_uint(result)
-                if isinstance(convert_data, tuple) and len(convert_data) != 0:
-                    self.result_dict["bool"].append(convert_data[0])
-                    self.result_dict["uint"].append(convert_data[1])
+                convert_data = to_bool(result[0])
+                self.result_dict["bool"].append(convert_data)
+                convert_data = to_int_16(result[0])
+                self.result_dict["int"].append(convert_data)
+
             except Exception as e:
                 self.result_dict["int"].append("none")
                 self.result_dict["float"].append("none")
@@ -72,19 +91,18 @@ class TCPClient:
         while count < self.quantity:
             count += 1
             try:
-                result = self.tester.read_inputregisters(self.reg_address + count, 1)
+                result = self.tester.read_holdingregisters(self.reg_address + count, 1)
                 self.result_dict["reg_address"].append(self.reg_address + count)
                 if isinstance(result, list) and len(result) != 0:
-                    self.result_dict["int"].append(result[0])
+                    self.result_dict["uint"].append(result[0])
                 result_float = convert_registers_to_float(
-                    self.tester.read_inputregisters(self.reg_address + count, 2))
-
+                    self.tester.read_holdingregisters(self.reg_address + count, 2))
                 if isinstance(result_float, tuple) and len(result) != 0:
                     self.result_dict["float"].append(result_float)
-                convert_data = to_bool_and_uint(result)
-                if isinstance(convert_data, tuple) and len(convert_data) == 2:
-                    self.result_dict["bool"].append(convert_data[0])
-                    self.result_dict["uint"].append(convert_data[1])
+                convert_data = to_bool(result[0])
+                self.result_dict["bool"].append(convert_data)
+                convert_data = to_int_16(result[0])
+                self.result_dict["int"].append(convert_data)
             except Exception as e:
                 self.result_dict["int"].append("none")
                 self.result_dict["float"].append("none")
