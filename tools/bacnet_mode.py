@@ -1,6 +1,6 @@
-from tools.bacnet import BACnet
+from bacnet import BACnet
 from colorama import Fore, init
-from tools.validator import *
+from validator import *
 
 
 class BACnetMode:

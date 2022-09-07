@@ -1,6 +1,6 @@
 from colorama import Fore, init
-from tools.modbustcp import TCPClient
-from tools.validator import *
+from modbustcp import TCPClient
+from validator import *
 
 
 class ModbusMode:

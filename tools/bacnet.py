@@ -1,6 +1,6 @@
 import BAC0
 from colorama import Fore, init
-from tools.validator import *
+from validator import *
 
 
 class BACnet:
@@ -29,6 +29,7 @@ class BACnet:
         vendor = None
         try:
             i_am_list = self.bacnet_client.whois()
+            print(i_am_list)
         except Exception as e:
             print(Fore.LIGHTRED_EX + "NO RESPONSE WHO-IS", e)
         if len(i_am_list) > 0:
