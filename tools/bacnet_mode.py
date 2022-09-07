@@ -32,7 +32,7 @@ class BACnetMode:
     def run(self):
         method_state = False
         while not method_state:
-            self.method = input(Fore.LIGHTYELLOW_EX + "Choice action 1=WHO-IS, 2=RAED OBJECT-LIST 3=READ OBJECT:  ")
+            self.method = input(Fore.LIGHTYELLOW_EX + "Choice action 1=WHO-IS, 2=READ OBJECT-LIST 3=READ PROPERTY:  ")
             if validate_in_enum(['1', '2', '3'], self.method):
                 method_state = True
             else:

@@ -11,7 +11,7 @@ def run():
     if mode.modbus:
         print(Fore.LIGHTBLUE_EX + f'#############################\n'
                                   f'#        Modbus Tester      #\n'
-                                  f'#   0x01, 0x02, 0x03, 0x04  #\n'
+                                  f'#   FC01, FC02, FC03, FC04  #\n'
                                   f'#                           #\n'
                                   f'#############################')
         modbus = ModbusMode()
@@ -30,11 +30,11 @@ def run():
 
 
     elif mode.bacnet:
-        print(Fore.LIGHTBLUE_EX + f'#############################\n'
-                                  f'#                           #\n'
-                                  f'#         BACnet Tool       #\n'
-                                  f'#                           #\n'
-                                  f'#############################')
+        print(Fore.LIGHTBLUE_EX + f'##########################################\n'
+                                  f'#              BACnet Tool               #\n'
+                                  f'#   who-is, object-list, read-property   #\n'
+                                  f'#                                        #\n'
+                                  f'##########################################')
         bacnet = BACnetMode()
         while True:
             bacnet.client_params()
