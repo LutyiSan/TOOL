@@ -1,27 +1,12 @@
 import BAC0
 from colorama import Fore, init
-
-
-def validate_ip(ip):
-    a = ip.split('.')
-    if len(a) != 4:
-        return False
-    for x in a:
-        if not x.isdigit():
-            return False
-        i = int(x)
-        if i < 0 or i > 255:
-            return False
-    return True
+from tools.validator import *
 
 
 class BACnet:
-    def __init__(self, host_ip="localhost", netmask='32', listen_port=47808):
-        self.desk = None
-        self.name = None
+    def __init__(self, host_ip="localhost", netmask='24', listen_port=47808):
         init(autoreset=True)
-        self.bacnet_client = None
-        self.single_point_list = list()
+        self.single_point_list = []
         self.object_dict = {"DEVICE_IP": [], 'DEVICE_ID': [], 'OBJECT_TYPE': [], 'OBJECT_ID': [], 'OBJECT_NAME': [],
                             'DESCRIPTION': []}
         self.i_am_dict = {'DEVICE_IP': [], 'DEVICE_ID': [], "DEVICE_NAME": [], 'VENDOR': []}
@@ -105,12 +90,14 @@ class BACnet:
                                        f'{self.single_point_list[1]} | {self.single_point_list[2]}')
         except Exception as e:
             print(Fore.LIGHTRED_EX + "Can't read property", e)
+        self.single_point_list = []
         self.bacnet_client.disconnect()
 
     def get_object_list(self, device_ip, device_id):
         try:
             object_list = self.bacnet_client.read(
                 f'{device_ip}/{self.netmask} device {device_id} objectList')
+            print(object_list)
             objects_len = len(object_list)
             if objects_len > 0:
                 for i in object_list:
@@ -141,4 +128,3 @@ class BACnet:
     def disconnect(self):
         self.bacnet_client.disconnect()
         pass
-
